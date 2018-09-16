@@ -1,0 +1,28 @@
+@charset "utf-8";
+/* CSS Document */
+
+@font-face {
+    font-family:'BPG_Arial';
+    src: url('../fonts/BPG_Arial.eot');
+    src: url('../fonts/BPG_Arial.eot#iefix') format('embedded-opentype'),
+         url('../fonts/BPG_Arial.woff') format('woff'),
+         url('../fonts/BPG_Arial.ttf') format('truetype'),
+         url('../fonts/BPG_Arial.svg#BPG_Arial') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family:'BPG_Mrgvlovani_Caps';
+    src: url('../fonts/BPG_Mrgvlovani_Caps.eot');
+    src: url('../fonts/BPG_Mrgvlovani_Caps.eot#iefix') format('embedded-opentype'),
+         url('../fonts/BPG_Mrgvlovani_Caps.woff') format('woff'),
+         url('../fonts/BPG_Mrgvlovani_Caps.ttf') format('truetype'),
+         url('../fonts/BPG_Mrgvlovani_Caps.svg#BPG_Mrgvlovani_Caps') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+h1, h2, h3, h4, h5, h6 {font-family:'BPG_Mrgvlovani_Caps';text-transform:uppercase;}
+
+body {font-size:13px;line-height:1.1;font-family:'BPG_Arial';}

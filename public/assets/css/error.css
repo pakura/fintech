@@ -1,0 +1,12 @@
+html, body {height:100%;}
+body {background:#4682b4;overflow:hidden;}
+#error {width:500px;height:500px;margin:-250px 0 0 -250px;position:absolute;left:50%;top:50%;}
+#message {padding-bottom:40px;}
+#message h1 {font-family:"Ubuntu",sans-serif;color:#fff;font-size:200px;}
+#message h2 {font-family:"Ubuntu",sans-serif;color:#fff;}
+#message h2 span {font-weight:300;}
+#btn {font-family:"Ubuntu",sans-serif;font-weight:500;font-size:17px;}
+#btn a {font-size:16px;color:#fff;background:#0d4f8b;padding:15px 60px;border-radius:30px;}
+@media only screen and (max-width: 768px) {
+    #message h1 {font-size:150px;}
+}
