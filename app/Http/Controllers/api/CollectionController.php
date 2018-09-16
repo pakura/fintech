@@ -26,19 +26,39 @@ class CollectionController extends Controller
     }
 
     public function getCoupons(Request $request){
-        $data = (new Coupons)->where('company_id', $request->get('company_id'))->joinlanguage()->get();
-        $code = (new Codes);
-        foreach ($data as $coupon){
-            $coupon->codes = $code->where('coupon_id', $coupon->coupons_id)->where('status', 1)->get();
-        }
+        $data = (new Coupons)->joinlanguage();
+        if($request->has('company_id'))
+            $data = $data->where('company_id', $request->get('company_id'));
+        $data = $data->get();
         $this->service->responseData(['data' => $data], $request);
-
     }
 
     public function OrderCode(Request $request){
-        (new Codes)->where('code', $request->get('code'))->update(['status' => 1, 'updated_at' => date('Y-m-d H:i:s')]);
-        $this->service->responseData(['data' => 'Geixare ojaxshi'], $request);
+        $code = (new Codes)->where('coupon_id', $request->get('coupon_id'))->where('status', 0)->first();
+
+        if(!$code)
+            $this->service->responseData(['error' => '1001'], $request);
+
+        $company = (new Company)->joinLanguage()->where('id', $code->company_id)->first();
+        if(!$company)
+            $this->service->responseData(['error' => '1001'], $request);
+        $coupon = (new Coupons)->joinLanguage()->where('id', $code->coupon_id)->first();
+
+        $this->service->payWithBOG([
+            'from' => $request->get('user_account'),
+            'to' => $company->account,
+            'price' => $coupon->price,
+            'companyName' => $company->title,
+            'username' => $request->get('username')
+        ]);
+
+        (new Codes)->where('code', $code->code)->update(['status' => 1, 'updated_at' => date('Y-m-d H:i:s')]);
+
+        $this->service->responseData(['data' => 'geixare ojaxshi'], $request);
 
     }
+
+
+
 
 }

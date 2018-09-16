@@ -6,7 +6,22 @@
             'class' => 'form-control',
         ]) !!}
         @if ($error)
-        <span>{{$error}}</span>
+            <span>{{$error}}</span>
+        @endif
+    </div>
+</div>
+
+<div class="form-group-separator"></div>
+
+<div class="form-group{{($error = $errors->first('account')) ? ' validate-has-error' : '' }}">
+    <label class="col-sm-2 control-label required">Account Number:</label>
+    <div class="col-sm-10">
+        {!! Form::text('account', null, [
+            'id' => 'account' . $current->language,
+            'class' => 'form-control',
+        ]) !!}
+        @if ($error)
+            <span>{{$error}}</span>
         @endif
     </div>
 </div>
@@ -30,7 +45,7 @@
 <div class="form-group{{($error = $errors->first('product_type')) ? ' validate-has-error' : '' }}">
     <label class="col-sm-2 control-label required">product_type:</label>
     <div class="col-sm-10">
-        {!! Form::select('product_type', ['cosmetic', 'entertainment', 'clothes', 'accessories'], null, [
+        {!! Form::select('product_type', config('app.categories'), null, [
             'product_type' => 'name' . $current->language,
             'class' => 'form-control',
         ]) !!}

@@ -20,6 +20,7 @@ class CompanyRequest extends Request
             'title' => 'required|min:2',
             'slug' => 'required|min:2|unique:companies,slug,'.$id,
             'image' => 'required',
+            'account' => 'required|min:2',
             'gender' => 'required',
             'age_from' => 'required',
             'age_to' => 'required',

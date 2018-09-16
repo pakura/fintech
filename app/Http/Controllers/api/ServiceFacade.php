@@ -53,92 +53,30 @@ class ServiceFacade
     }
 
 
-    public function getStaffAvaiableTimes($request){
-        $service = (new Services)->where('id', $request->get('service_id'))->first();
-        $weekDay = date('N', strtotime($request->get('day')));
-        $craftsmen = (new Craftsmen)->where('sector', $request->get('type_id'))->pluck('id');
-        $weekTimes = \DB::table('staff_dates')->where('services_id', $service->id)->whereIn('staff_id', $craftsmen)->get();
-        $staffs = [];
-        foreach ($weekTimes as $key => $weekTime){
-            $orderDayTimes = (array)$weekTime;
-            if($orderDayTimes['day'.$weekDay.'_from'] == ''){
-                unset($weekTimes[$key]);
-                continue;
-            }
-            $orderDayTimes = [$orderDayTimes['day'.$weekDay.'_from'],$orderDayTimes['day'.$weekDay.'_to']];
-            $staffCustomDayTimes = \DB::table('staff_custom_date')
-                ->where('services_id', $service->id)
-                ->where('staff_id', $weekTime->staff_id)
-                ->where('day', $request->get('day'))
-                ->first();
+    public function payWithBOG($arg){
+        $url = 'https://api.fintech.ge/api/Transfers/TransferOut';
+        $data = (object)[
+            'SrcAcctKey' => $arg['from'],
+            'BenefAcctNo' => $arg['to'],
+            'BenefName' => $arg['companyName'],
+            'PayerName' => $arg['username'],
+            'Amount' => $arg['price'],
+            'Ccy' => 'Gel',
+            'Nomination' => 'Buy Coupon'
+        ];
 
-            if($staffCustomDayTimes){
-                if($staffCustomDayTimes->from != ''){
-                    $orderDayTimes[0] = $staffCustomDayTimes->from;
-                    $orderDayTimes[1] = $staffCustomDayTimes->to;
-                } else {
-                    unset($weekTimes[$key]);
-                }
-            }
-            $staffs[$weekTime->staff_id] = [$orderDayTimes[0], $orderDayTimes[1]];
-        }
-        $availableTimes = [];
-        foreach ($staffs as $id => $times){
-            $from = date('G', strtotime($times[0]));
-            $to = date('G', strtotime($times[1]));
-            for($i=$from; $i<$to; $i++){
-                $res = (new Schedules)
-                    ->where('service_id', $service->id)
-                    ->where('staff_id', $id)
-                    ->where('start', $request->get('day'))
-                    ->where('time_start', ($i<10)?'0'.$i.':00:00':$i.':00:00')
-                    ->first();
-                if(!$res || ($res->status == 0 && strtotime($res->created_at)<(time()-60*5))){
-                    if($service->slug == 'khelosnis-gamodzakheba'){
-                        $type = (new CraftsmenTypes)->where('id', $request->get('type_id'))->first();
-                    }
-                    $prices = \DB::table('craftsmen_type_customprice')
-                        ->where('service_id', $service->id)
-                        ->where('service_type_id', $request->get('type_id'))
-                        ->where('day', $weekDay)
-//                        ->where('from', '>=', ($i<10)?'0'.$i.':00:00':$i.':00:00')
-//                        ->where('to', '<', ($i<10)?'0'.$i.':00:00':$i.':00:00')
-                        ->get();
-                    if(!isset($availableTimes[($i<10)?'0'.$i.':00:00':$i.':00:00'])){
-                        $customPrice = null;
-                        foreach ($prices as $price){
-                            if(strtotime($price->from) <= strtotime(($i<10)?'0'.$i.':00:00':$i.':00:00') && strtotime($price->to) > strtotime(($i<10)?'0'.$i.':00:00':$i.':00:00')){
-                                $customPrice = $price->custom_price;
-                            }
-                        }
-                        $price = isset($customPrice)?$customPrice:$type->price;
-                        $availableTimes[($i<10)?'0'.$i.':00:00':$i.':00:00'] = (object)[
-                            'time' => ($i<10)?'0'.$i.':00:00':$i.':00:00',
-                            'price' => $price
-                        ];
-                        if($res){
-                            if(isset($availableTimes[($i<10)?'0'.$i.':00:00':$i.':00:00']->staff)){
-                                $availableTimes[($i<10)?'0'.$i.':00:00':$i.':00:00']->staff = [$id];
-                            } else {
-                                $availableTimes[($i<10)?'0'.$i.':00:00':$i.':00:00']->staff[] = $id;
-                            }
-                        }
-                    } else {
-                        if(isset($availableTimes[($i<10)?'0'.$i.':00:00':$i.':00:00']->staff)){
-                            $availableTimes[($i<10)?'0'.$i.':00:00':$i.':00:00']->staff = [$id];
-                        } else {
-                            $availableTimes[($i<10)?'0'.$i.':00:00':$i.':00:00']->staff[] = $id;
-                        }
-                    }
-                }
-            }
-        }
-        $temp = $availableTimes;
-        $availableTimes = [];
-        foreach ($temp as $time){
-            $availableTimes[] = $time;
-        }
-        return $availableTimes;
+        $this->payment($url, $data);
+    }
+
+    private function payment($url, $data){
+        $ch = curl_init( $url );
+        $payload = json_encode( $data );
+        curl_setopt( $ch, CURLOPT_POSTFIELDS, $payload );
+        curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+        $result = curl_exec($ch);
+        curl_close($ch);
+
     }
 
 

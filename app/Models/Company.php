@@ -31,7 +31,7 @@ class Company extends Model
      * @var array
      */
     protected $fillable = [
-        'collection_id', 'slug', 'position', 'visible', 'image', 'name', 'gender', 'age_from', 'age_to', 'product_type', 'created_at'
+        'collection_id', 'slug', 'position', 'visible', 'account', 'image', 'name', 'gender', 'age_from', 'age_to', 'product_type', 'created_at'
     ];
 
     /**

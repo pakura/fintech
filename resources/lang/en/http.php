@@ -18,4 +18,5 @@ return [
     '500' => 'Internal Server Error: The server encountered an internal error and was unable to complete your request',
     '503' => 'Service Unavailable: The server is currently unavailable',
 
+    '1001' => 'Invalid coupon code',
 ];
