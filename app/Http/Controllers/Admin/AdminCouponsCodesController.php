@@ -42,7 +42,7 @@ class AdminCouponsCodesController extends Controller
     {
         $data['parent'] = (new Collection)->where('type', Codes::TYPE)
             ->findOrFail($collectionId);
-        $data['items'] = $this->model->filesCount()->getAdminCollection($data['parent']);
+        $data['items'] = $this->model->filesCount()->orderBy('status', 'desc')->getAdminCollection($data['parent']);
 
         $data['parentSimilar'] = $this->model->byType()->get();
 

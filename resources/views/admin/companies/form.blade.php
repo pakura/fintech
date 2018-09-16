@@ -26,6 +26,20 @@
     </div>
 </div>
 
+
+<div class="form-group{{($error = $errors->first('site')) ? ' validate-has-error' : '' }}">
+    <label class="col-sm-2 control-label required">Company web site:</label>
+    <div class="col-sm-10">
+        {!! Form::text('site', null, [
+            'id' => 'site' . $current->language,
+            'class' => 'form-control',
+        ]) !!}
+        @if ($error)
+            <span>{{$error}}</span>
+        @endif
+    </div>
+</div>
+
 <div class="form-group-separator"></div>
 
 <div class="form-group{{($error = $errors->first('gender')) ? ' validate-has-error' : '' }}">

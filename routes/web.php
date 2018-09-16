@@ -17,4 +17,8 @@ $router->group(['namespace' => 'Web'], function ($router) {
         $this->app['config']->get('web.glide_base_url', '!img') . '/{path}',
         ['as' => 'glide', 'uses' => 'WebGlideServerController@show']
     )->where('path', '.+');
+    $router->group(['middleware' => ['web.data']], function ($router) {
+        $router->get('/coupon/{code}', ['as' => 'showcoupon', 'uses' => 'WebHomeController@coupon']);
+    });
+
 });

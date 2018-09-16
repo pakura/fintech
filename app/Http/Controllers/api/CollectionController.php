@@ -54,7 +54,7 @@ class CollectionController extends Controller
 
         (new Codes)->where('code', $code->code)->update(['status' => 1, 'updated_at' => date('Y-m-d H:i:s')]);
 
-        $this->service->responseData(['data' => 'geixare ojaxshi'], $request);
+        $this->service->responseData(['data' => ['url' => 'http://bog.devmobility.com/coupon/'.$code->code]], $request);
 
     }
 
