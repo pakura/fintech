@@ -5,16 +5,10 @@
 3. Install composer
 4. Donwload mysql from: https://www.mysql.com/downloads/
 5. Run this command using git bash:
-	git clone https://bitbucket.org/mobilitydevteam/mobility-cms {project_name}
+	git clone https://github.com/pakura/fintek/edit/master/readme.md {project_name}
 6. cd on you project dir and run this command via terminal or cmd:
-	composer update
-7. If you have not renamed the .env.example file to .env, you should do that now. If the application key is not set, your user sessions and other encrypted data will not be secure!
-8. Run this command using terminal or cmd:
-	php artisan key:generate
-9. For datebase migration run this command:
-	php artisan migrate
-10. Run this command for start server:
-	php artisan serve
-	
+	composer update	
+7. Please upload run/import db.sql :/
+
 Done
 	
